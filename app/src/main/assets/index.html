@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Flappy Nature: Ultimate Deluxe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: none; }
+        body {
+            margin: 0; padding: 0; background: #0a0f1e;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; font-family: 'Nunito', sans-serif; overflow: hidden;
+        }
+        #game-container {
+            position: relative; width: 100%; max-width: 400px; height: 100vh; max-height: 750px;
+            border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+            overflow: hidden; border: 4px solid rgba(255,255,255,0.9); background: #87CEEB;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        .ui-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(ellipse at center, rgba(15,23,42,0.35), rgba(0,0,0,0.65));
+            backdrop-filter: blur(8px);
+            text-align: center; transition: opacity 0.3s ease; z-index: 20;
+        }
+        .card {
+            background: linear-gradient(160deg, rgba(255,255,255,0.98), rgba(245,248,255,0.96));
+            border-radius: 26px; padding: 28px 25px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.8);
+            width: 86%; border: 1px solid rgba(255,255,255,0.6);
+            display: flex; flex-direction: column; align-items: center; gap: 13px;
+            animation: pop-in 0.35s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes pop-in { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        h1 {
+            margin: 0; font-size: 30px; font-weight: 900; font-family: 'Baloo 2', sans-serif;
+            background: linear-gradient(135deg, #16a34a, #047857, #10b981);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(16,185,129,0.15);
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none; padding: 15px 25px; color: white; font-size: 16px; font-weight: 900;
+            font-family: 'Nunito', sans-serif; border-radius: 30px; cursor: pointer;
+            width: 100%; box-shadow: 0 8px 18px rgba(37, 99, 235, 0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+            position: relative; overflow: hidden; letter-spacing: 0.5px;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .btn::after {
+            content: ""; position: absolute; top: 0; left: -75%; width: 50%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+            transform: skewX(-20deg);
+        }
+        .btn:active { transform: translateY(3px) scale(0.98); box-shadow: 0 3px 8px rgba(37, 99, 235, 0.35); }
+        .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 18px rgba(245, 158, 11, 0.45), inset 0 1px 0 rgba(255,255,255,0.35); }
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 18px rgba(16, 185, 129, 0.45), inset 0 1px 0 rgba(255,255,255,0.35); }
+
+        .hud {
+            position: absolute; top: 18px; left: 0; width: 100%;
+            padding: 0 18px; display: flex; justify-content: space-between;
+            align-items: center; pointer-events: none; z-index: 10;
+        }
+        .hud-badge {
+            background: linear-gradient(160deg, rgba(255,255,255,0.95), rgba(240,245,255,0.85));
+            color: #334155; padding: 7px 15px;
+            border-radius: 20px; font-size: 15px; font-weight: 900; font-family: 'Baloo 2', sans-serif;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9);
+            pointer-events: auto; cursor: pointer; border: 1px solid rgba(255,255,255,0.6);
+        }
+        .progress-bar-container {
+            position: absolute; top: 62px; left: 18px; right: 18px; height: 9px;
+            background: rgba(255,255,255,0.35); border-radius: 10px; z-index: 10; overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+        }
+        .progress-bar {
+            height: 100%; width: 0%; border-radius: 10px;
+            background: linear-gradient(90deg, #10b981, #34d399, #f59e0b);
+            box-shadow: 0 0 10px rgba(16,185,129,0.7);
+            transition: width 0.3s ease;
+        }
+
+        .hidden { opacity: 0; pointer-events: none; }
+
+        .shop-container { max-height: 320px; overflow-y: auto; width: 100%; padding: 5px; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .shop-item {
+            background: linear-gradient(160deg, #f8fafc, #eef2f7); border: 2px solid #dbe3ec; border-radius: 16px;
+            padding: 11px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+        .shop-item.active { border-color: #10b981; background: linear-gradient(160deg, #ecfdf5, #d1fae5); box-shadow: 0 0 0 3px rgba(16,185,129,0.25), 0 4px 10px rgba(16,185,129,0.2); }
+        .skin-preview { width: 44px; height: 44px; border-radius: 50%; margin: 5px 0; position: relative; }
+        .skin-preview::after {
+            content:""; position:absolute; inset:-6px; border-radius:50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.5), transparent 70%);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="canvas" width="400" height="750"></canvas>
+
+    <div class="hud">
+        <div class="hud-badge" id="hud-level">Level 1</div>
+        <div class="hud-badge" onclick="openMenu()" style="background: linear-gradient(160deg,#60a5fa,#2563eb); color: white;">⚙️ Menu</div>
+        <div class="hud-badge" id="hud-coins" style="color: #d97706;">🪙 0</div>
+    </div>
+    <div class="progress-bar-container"><div class="progress-bar" id="level-progress"></div></div>
+
+    <div id="start-screen" class="ui-overlay">
+        <div class="card">
+            <h1>FLAPPY NATURE</h1>
+            <p style="margin:0; font-size: 13px; color: #64748b; font-weight:700;">Easy Start • Infinite Fun</p>
+            <button class="btn btn-green" onclick="startGame()">PLAY GAME</button>
+            <button class="btn btn-gold" onclick="openShop()">CHOOSE BIRD 🐦</button>
+            <button class="btn" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);" onclick="openWallet()">WALLET 💰</button>
+            <button class="btn" onclick="openSettings()">SETTINGS ⚙️</button>
+        </div>
+    </div>
+
+    <div id="menu-screen" class="ui-overlay hidden">
+        <div class="card">
+            <h1>GAME MENU</h1>
+            <button class="btn btn-green" onclick="resumeGame()">RESUME</button>
+            <button class="btn btn-gold" onclick="openShop()">CHOOSE BIRD 🐦</button>
+            <button class="btn" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);" onclick="openWallet()">WALLET 💰</button>
+            <button class="btn" onclick="showStartScreen()">MAIN MENU</button>
+        </div>
+    </div>
+
+    <div id="wallet-screen" class="ui-overlay hidden">
+        <div class="card" style="padding:18px;">
+            <h1 style="font-size:22px;">WALLET</h1>
+            <div style="background:#0f172a; color:#fff; width:100%; border-radius:14px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:800; font-size:14px;">Net Winnings</span>
+                <span id="wallet-rupees" style="font-weight:900; font-size:18px; color:#fbbf24;">₹0</span>
+            </div>
+            <p style="margin:2px 0; font-size:11px; color:#94a3b8;">100 coins = ₹1 · <span id="wallet-coin-count">0</span> coins</p>
+
+            <div id="wallet-locked" style="width:100%; background:#f1f5f9; border:2px dashed #cbd5e1; border-radius:14px; padding:16px; text-align:center;">
+                <div style="font-size:26px;">🔒</div>
+                <p style="margin:6px 0 2px; font-size:13px; font-weight:800; color:#475569;">UPI Withdrawal Locked</p>
+                <p style="margin:0; font-size:12px; color:#64748b;">Reach ₹200 net winnings to unlock (<span id="wallet-remaining">₹200</span> more to go)</p>
+            </div>
+
+            <div id="wallet-unlocked" class="hidden" style="width:100%; display:flex; flex-direction:column; gap:10px;">
+                <div style="text-align:left; width:100%;">
+                    <label style="font-size:12px; font-weight:800; color:#475569;">Enter your UPI ID</label>
+                    <input id="upi-input" type="text" placeholder="yourname@upi"
+                        style="width:100%; margin-top:6px; padding:12px 14px; border-radius:12px; border:2px solid #cbd5e1; font-size:14px; font-weight:700; background:#f8fafc;">
+                </div>
+                <button class="btn btn-green" onclick="requestWithdraw()">REQUEST WITHDRAWAL</button>
+                <p id="wallet-msg" style="margin:0; font-size:12px; font-weight:800; color:#059669;"></p>
+            </div>
+
+            <div style="width:100%; background:#fef3c7; border:1px solid #fbbf24; border-radius:10px; padding:8px 10px; margin-top:4px;">
+                <p style="margin:0; font-size:11px; font-weight:900; color:#92400e;">⚠️ DEMO MODE — Testing Only. No real payout is sent.</p>
+            </div>
+
+            <button class="btn" onclick="closeWallet()">BACK</button>
+        </div>
+    </div>
+
+    <div id="shop-screen" class="ui-overlay hidden">
+        <div class="card" style="padding: 16px;">
+            <h1 style="font-size:22px;">BIRD SELECTION</h1>
+            <p style="margin:0; font-size:13px; color:#d97706; font-weight:900;">Coins: <span id="shop-coins">0</span></p>
+            <div class="shop-container"><div class="shop-grid" id="shop-items"></div></div>
+            <button class="btn" onclick="closeShop()">BACK</button>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="ui-overlay hidden">
+        <div class="card">
+            <h1>SETTINGS</h1>
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center; font-weight:bold; color:#334155;">
+                <span>Sound FX:</span>
+                <button class="btn" style="width:auto; padding:8px 15px;" id="sound-toggle-btn" onclick="toggleSound()">ON</button>
+            </div>
+            <button class="btn" onclick="closeSettings()">BACK</button>
+        </div>
+    </div>
+
+    <div id="complete-screen" class="ui-overlay hidden">
+        <div class="card">
+            <h1 style="color: #10b981; background: none; -webkit-text-fill-color:#10b981;">LEVEL PASSED!</h1>
+            <p style="margin:0; font-size: 14px; color:#64748b; font-weight:700;">Next level is getting faster & exciting!</p>
+            <button class="btn btn-green" onclick="nextLevel()">CONTINUE 🚀</button>
+        </div>
+    </div>
+
+    <div id="gameover-screen" class="ui-overlay hidden">
+        <div class="card">
+            <h1 style="color: #ef4444; background: none; -webkit-text-fill-color:#ef4444;">CRASHED!</h1>
+            <button class="btn btn-green" onclick="retryLevel()">TRY AGAIN</button>
+            <button class="btn btn-gold" onclick="openShop()">CHANGE BIRD</button>
+            <button class="btn" onclick="showStartScreen()">MAIN MENU</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const screens = {
+        start: document.getElementById("start-screen"),
+        menu: document.getElementById("menu-screen"),
+        shop: document.getElementById("shop-screen"),
+        wallet: document.getElementById("wallet-screen"),
+        settings: document.getElementById("settings-screen"),
+        complete: document.getElementById("complete-screen"),
+        gameover: document.getElementById("gameover-screen")
+    };
+
+    let soundEnabled = localStorage.getItem("fn_sound") !== "false";
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        if (!soundEnabled) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'flap') {
+            osc.frequency.setValueAtTime(350, now); osc.frequency.exponentialRampToValueAtTime(550, now + 0.1);
+            gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.1);
+            osc.start(now); osc.stop(now + 0.1);
+        } else if (type === 'coin') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1000, now); osc.frequency.setValueAtTime(1500, now + 0.1);
+            gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
+        } else if (type === 'crash') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(40, now + 0.25);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.25);
+            osc.start(now); osc.stop(now + 0.25);
+        } else if (type === 'hamba') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(120, now);
+            osc.frequency.linearRampToValueAtTime(80, now + 0.8);
+            gain.gain.setValueAtTime(0.15, now); gain.gain.linearRampToValueAtTime(0, now + 0.8);
+            osc.start(now); osc.stop(now + 0.8);
+        } else if (type === 'levelup') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now+0.1); osc.frequency.setValueAtTime(784, now+0.2);
+            gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0, now + 0.4);
+            osc.start(now); osc.stop(now + 0.4);
+        }
+    }
+
+    let currentLevel = parseInt(localStorage.getItem("fn_level")) || 1;
+    let coins = parseInt(localStorage.getItem("fn_coins")) || 0;
+    let equippedSkin = localStorage.getItem("fn_skin") || "yellow";
+    let unlockedSkins = JSON.parse(localStorage.getItem("fn_unlocked")) || ["yellow"];
+
+    const SKINS = {
+        yellow: { name: "Classic Bird", color: "#fbbf24", color2: "#f59e0b", wing: "#fef3c7", glow: "255,193,7", cost: 0 },
+        blue:   { name: "Blue Jay",     color: "#60a5fa", color2: "#3b82f6", wing: "#dbeafe", glow: "59,130,246", cost: 30 },
+        red:    { name: "Cardinal",     color: "#f87171", color2: "#ef4444", wing: "#fee2e2", glow: "239,68,68", cost: 60 },
+        pink:   { name: "Flamingo",     color: "#f472b6", color2: "#ec4899", wing: "#fbcfe8", glow: "236,72,153", cost: 100 },
+        green:  { name: "Parrot",       color: "#4ade80", color2: "#22c55e", wing: "#dcfce7", glow: "34,197,94", cost: 150 },
+        ninja:  { name: "Ninja Bird",   color: "#334155", color2: "#0f172a", wing: "#0f172a", eyeBand: "#ef4444", glow: "148,163,184", cost: 200 },
+        gold:   { name: "Golden Eagle", color: "#f59e0b", color2: "#d97706", wing: "#fef08a", glow: "245,158,11", cost: 300 }
+    };
+
+    let gameState = 'START';
+    let frames = 0, passedPipes = 0, targetPipes = 10;
+    let bgOffset = 0, cowX = 500, cowTimer = 0, showHambaText = 0;
+    let config = { speed: 2.0, gap: 180 };
+    let shakeAmount = 0;
+
+    let trails = [], collectibles = [], sparkles = [], confetti = [], clouds = [];
+    for (let i = 0; i < 6; i++) clouds.push({ x: Math.random()*400, y: 40 + Math.random()*160, s: 0.6 + Math.random()*0.8, sp: 0.15 + Math.random()*0.2 });
+
+    function getTimeOfDay() {
+        let cycle = currentLevel % 3;
+        if (cycle === 1) return { top: "#38bdf8", mid: "#7dd3fc", bottom: "#bae6fd", hill1: "#16a34a", hill2: "#15803d" };
+        if (cycle === 2) return { top: "#fb923c", mid: "#f97316", bottom: "#fde047", hill1: "#166534", hill2: "#14532d" };
+        return { top: "#0f172a", mid: "#1e1b4b", bottom: "#312e81", hill1: "#052e16", hill2: "#022c0f" };
+    }
+
+    function drawCow(x, y) {
+        ctx.save(); ctx.translate(x, y);
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.beginPath(); ctx.ellipse(15, 0, 20, 5, 0, 0, Math.PI*2); ctx.fill();
+
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(0, -22, 35, 18, 5); ctx.fill();
+        ctx.fillStyle = "#000";
+        ctx.beginPath(); ctx.arc(10, -15, 4, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(24, -18, 5, 0, Math.PI*2); ctx.fill();
+
+        let eating = Math.sin(frames * 0.05) > 0;
+        let headY = eating ? -15 : -25;
+
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(30, headY, 14, 12, 3); ctx.fill();
+        ctx.fillStyle = "#f472b6"; ctx.beginPath(); ctx.roundRect(38, headY+4, 6, 8, 2); ctx.fill();
+
+        ctx.fillStyle = "#000";
+        ctx.fillRect(5, -5, 3, 10); ctx.fillRect(12, -5, 3, 10);
+        ctx.fillRect(25, -5, 3, 10); ctx.fillRect(30, -5, 3, 10);
+
+        if (showHambaText > 0) {
+            ctx.fillStyle = "white"; ctx.beginPath(); ctx.roundRect(20, -50, 60, 25, 8); ctx.fill();
+            ctx.fillStyle = "black"; ctx.font = "bold 12px Nunito"; ctx.fillText("হাম্বা!", 32, -33);
+            showHambaText--;
+        }
+        ctx.restore();
+    }
+
+    const bird = {
+        x: 80, y: 350, radius: 19, speed: 0, glowPulse: 0,
+        draw() {
+            ctx.save(); ctx.translate(this.x, this.y);
+            ctx.rotate(Math.min(Math.PI/4, Math.max(-Math.PI/6, (this.speed * 4) * Math.PI / 180)));
+            let s = SKINS[equippedSkin];
+
+            // soft glow aura behind bird
+            if (this.glowPulse > 0) {
+                let g = ctx.createRadialGradient(0,0,0,0,0,this.radius*2.4);
+                g.addColorStop(0, `rgba(${s.glow},${0.5*this.glowPulse})`);
+                g.addColorStop(1, `rgba(${s.glow},0)`);
+                ctx.fillStyle = g;
+                ctx.beginPath(); ctx.arc(0,0,this.radius*2.4,0,Math.PI*2); ctx.fill();
+                this.glowPulse -= 0.04;
+            }
+
+            // body shadow depth
+            let bodyGrad = ctx.createRadialGradient(-6,-6,4,0,0,this.radius);
+            bodyGrad.addColorStop(0, s.color);
+            bodyGrad.addColorStop(1, s.color2 || s.color);
+            ctx.fillStyle = bodyGrad;
+            ctx.beginPath(); ctx.arc(0, 0, this.radius, 0, Math.PI*2); ctx.fill();
+            ctx.lineWidth = 2.5; ctx.strokeStyle = "rgba(255,255,255,0.9)"; ctx.stroke();
+
+            if (s.eyeBand) {
+                ctx.fillStyle = s.eyeBand;
+                ctx.fillRect(-14, -10, 28, 7);
+            }
+
+            let wingY = Math.sin(frames * 0.4) * 4;
+            let wingGrad = ctx.createLinearGradient(-16,wingY-6,6,wingY+6);
+            wingGrad.addColorStop(0, s.wing); wingGrad.addColorStop(1, "rgba(255,255,255,0.5)");
+            ctx.fillStyle = wingGrad;
+            ctx.beginPath(); ctx.ellipse(-5, wingY, 11, 6, -Math.PI/8, 0, Math.PI*2); ctx.fill();
+
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(7, -5, 5, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(8, -5, 2.5, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(9, -6.5, 1, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#ea580c"; ctx.beginPath(); ctx.moveTo(13, -2); ctx.lineTo(23, 2); ctx.lineTo(13, 6); ctx.fill();
+            ctx.restore();
+        },
+        flap() {
+            this.speed = -5.8; playSound('flap'); this.glowPulse = 1;
+            trails.push({x: this.x, y: this.y, alpha: 1, radius: 12});
+            let s = SKINS[equippedSkin];
+            for (let i=0;i<6;i++) {
+                sparkles.push({ x:this.x, y:this.y, vx:(Math.random()-0.5)*3, vy:(Math.random()-0.5)*3, life:1, color:s.glow });
+            }
+        },
+        update() {
+            if (gameState === 'PLAYING') {
+                this.speed += 0.25; this.y += this.speed;
+                if (this.y >= canvas.height - 110 || this.y <= 0) gameOver();
+            }
+        }
+    };
+
+    const pipes = {
+        items: [],
+        draw() {
+            for (let p of this.items) {
+                let bY = p.top + config.gap;
+
+                let drawDetailedPillar = (x, y, w, h) => {
+                    let grad = ctx.createLinearGradient(x, 0, x + w, 0);
+                    grad.addColorStop(0, "#7c8ba1"); grad.addColorStop(0.5, "#94a3b8"); grad.addColorStop(1, "#64748b");
+                    ctx.fillStyle = grad;
+                    ctx.strokeStyle = "#334155"; ctx.lineWidth = 2;
+                    ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h);
+                    ctx.strokeStyle = "rgba(0,0,0,0.15)";
+                    for (let i=12; i<h; i+=22) {
+                        ctx.beginPath(); ctx.moveTo(x, y+i); ctx.lineTo(x+w, y+i); ctx.stroke();
+                    }
+                    // rim highlight
+                    ctx.fillStyle = "rgba(255,255,255,0.25)";
+                    ctx.fillRect(x, y, 5, h);
+                };
+
+                drawDetailedPillar(p.x, 0, 60, p.top);
+                drawDetailedPillar(p.x, bY, 60, canvas.height - 100 - bY);
+
+                // lush vines/leaves
+                ctx.fillStyle = "#16a34a";
+                ctx.beginPath(); ctx.arc(p.x + 12, p.top - 5, 8, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x + 45, p.top - 12, 10, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "#22c55e";
+                ctx.beginPath(); ctx.arc(p.x + 28, p.top - 16, 7, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#15803d"; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(p.x+10, 0); ctx.quadraticCurveTo(p.x+30, p.top/2, p.x+40, p.top); ctx.stroke();
+
+                ctx.fillStyle = "#16a34a";
+                ctx.beginPath(); ctx.arc(p.x + 18, bY + 10, 9, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x + 42, bY + 20, 8, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "#22c55e";
+                ctx.beginPath(); ctx.arc(p.x + 30, bY + 14, 6, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#15803d";
+                ctx.beginPath(); ctx.moveTo(p.x+20, bY); ctx.quadraticCurveTo(p.x+10, bY+40, p.x+40, bY+60); ctx.stroke();
+            }
+        },
+        update() {
+            if (gameState !== 'PLAYING') return;
+            if (frames % 90 === 0) {
+                let maxT = canvas.height - 100 - config.gap - 60;
+                let topH = Math.floor(Math.random() * (maxT - 60)) + 50;
+                this.items.push({ x: canvas.width, top: topH, passed: false });
+                if (Math.random() > 0.3) collectibles.push({ x: canvas.width + 30, y: topH + config.gap/2, collected: false });
+            }
+
+            for (let i = 0; i < this.items.length; i++) {
+                let p = this.items[i]; p.x -= config.speed;
+                let bY = p.top + config.gap;
+
+                if (bird.x + bird.radius - 4 > p.x && bird.x - bird.radius + 4 < p.x + 60) {
+                    if (bird.y - bird.radius < p.top || bird.y + bird.radius > bY) gameOver();
+                }
+
+                if (p.x + 60 < bird.x && !p.passed) {
+                    p.passed = true; passedPipes++; updateHUD();
+                    if (passedPipes >= targetPipes) levelComplete();
+                }
+            }
+            if (this.items.length && this.items[0].x < -70) this.items.shift();
+        }
+    };
+
+    function handleCollectibles() {
+        for (let i = collectibles.length - 1; i >= 0; i--) {
+            let c = collectibles[i]; c.x -= config.speed;
+            if (!c.collected) {
+                let drawY = c.y + Math.sin(frames*0.1)*5;
+                let g = ctx.createRadialGradient(c.x,drawY,0,c.x,drawY,14);
+                g.addColorStop(0, "#fff7d6"); g.addColorStop(0.5, "#fbbf24"); g.addColorStop(1, "#d97706");
+                ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c.x, drawY, 11, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+
+                if (Math.hypot(bird.x - c.x, bird.y - drawY) < 28) {
+                    c.collected = true; coins++; playSound('coin');
+                    for (let k=0;k<10;k++) sparkles.push({ x:c.x, y:drawY, vx:(Math.random()-0.5)*4, vy:(Math.random()-0.5)*4, life:1, color:"251,191,36" });
+                    saveData(); updateHUD();
+                }
+            }
+        }
+    }
+
+    function updateParticles() {
+        for (let i = sparkles.length-1; i>=0; i--) {
+            let s = sparkles[i];
+            s.x += s.vx; s.y += s.vy; s.life -= 0.035;
+            if (s.life <= 0) { sparkles.splice(i,1); continue; }
+            ctx.fillStyle = `rgba(${s.color},${s.life})`;
+            ctx.beginPath(); ctx.arc(s.x, s.y, 3*s.life, 0, Math.PI*2); ctx.fill();
+        }
+        for (let i = confetti.length-1; i>=0; i--) {
+            let c = confetti[i];
+            c.x += c.vx; c.y += c.vy; c.vy += 0.12; c.rot += c.vr; c.life -= 0.012;
+            if (c.life <= 0) { confetti.splice(i,1); continue; }
+            ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.rot);
+            ctx.fillStyle = c.color; ctx.globalAlpha = Math.max(0,c.life);
+            ctx.fillRect(-4,-4,8,8);
+            ctx.restore();
+        }
+    }
+
+    function spawnConfetti() {
+        const colors = ["#10b981","#f59e0b","#3b82f6","#ef4444","#f472b6","#facc15"];
+        for (let i=0;i<40;i++) {
+            confetti.push({
+                x: canvas.width/2, y: canvas.height/3,
+                vx: (Math.random()-0.5)*8, vy: -Math.random()*6 - 2,
+                rot: Math.random()*Math.PI, vr: (Math.random()-0.5)*0.3,
+                life: 1, color: colors[Math.floor(Math.random()*colors.length)]
+            });
+        }
+    }
+
+    function drawEnvironment() {
+        let weather = getTimeOfDay();
+        let sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        sky.addColorStop(0, weather.top); sky.addColorStop(0.55, weather.mid); sky.addColorStop(1, weather.bottom);
+        ctx.fillStyle = sky; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // sun/moon glow
+        let sunGrad = ctx.createRadialGradient(320,90,5,320,90,90);
+        sunGrad.addColorStop(0, "rgba(255,255,255,0.9)"); sunGrad.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = sunGrad; ctx.beginPath(); ctx.arc(320,90,90,0,Math.PI*2); ctx.fill();
+
+        // clouds parallax
+        for (let c of clouds) {
+            if (gameState === 'PLAYING') { c.x -= c.sp * config.speed; if (c.x < -60) c.x = canvas.width + 60; }
+            ctx.fillStyle = "rgba(255,255,255,0.75)";
+            ctx.beginPath();
+            ctx.ellipse(c.x, c.y, 26*c.s, 14*c.s, 0, 0, Math.PI*2);
+            ctx.ellipse(c.x+20*c.s, c.y+4*c.s, 18*c.s, 11*c.s, 0, 0, Math.PI*2);
+            ctx.ellipse(c.x-20*c.s, c.y+4*c.s, 18*c.s, 11*c.s, 0, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        // distant green hills (parallax layer, gives lush deep-green backdrop)
+        ctx.fillStyle = weather.hill2;
+        ctx.beginPath(); ctx.moveTo(0, canvas.height-140);
+        for (let x=0; x<=canvas.width; x+=40) ctx.lineTo(x, canvas.height-140 - Math.sin((x+bgOffset*0.4)*0.02)*18 - 20);
+        ctx.lineTo(canvas.width, canvas.height-100); ctx.lineTo(0, canvas.height-100); ctx.fill();
+
+        ctx.fillStyle = weather.hill1;
+        ctx.beginPath(); ctx.moveTo(0, canvas.height-120);
+        for (let x=0; x<=canvas.width; x+=40) ctx.lineTo(x, canvas.height-120 - Math.sin((x+bgOffset*0.8)*0.025)*14);
+        ctx.lineTo(canvas.width, canvas.height-100); ctx.lineTo(0, canvas.height-100); ctx.fill();
+
+        cowX -= config.speed * 0.3;
+        if (cowX < -100) cowX = canvas.width + 200;
+
+        if (gameState === 'PLAYING' && cowX > 0 && cowX < canvas.width) {
+            cowTimer++;
+            if (cowTimer > 400 && Math.random() < 0.01) {
+                playSound('hamba'); showHambaText = 60; cowTimer = 0;
+            }
+        }
+        drawCow(cowX, canvas.height - 110);
+
+        if (gameState === 'PLAYING') bgOffset = (bgOffset + config.speed) % 40;
+
+        // lush foreground grass strip with gradient + flowers
+        let grassGrad = ctx.createLinearGradient(0, canvas.height-100, 0, canvas.height);
+        grassGrad.addColorStop(0, "#4ade80"); grassGrad.addColorStop(1, "#166534");
+        ctx.fillStyle = grassGrad; ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+
+        ctx.fillStyle = "#22c55e"; ctx.fillRect(0, canvas.height - 100, canvas.width, 16);
+
+        ctx.strokeStyle = "#15803d"; ctx.lineWidth = 2;
+        for (let i=0; i<canvas.width+40; i+=20) {
+            let x = i - bgOffset;
+            ctx.beginPath(); ctx.moveTo(x, canvas.height - 84); ctx.lineTo(x-5, canvas.height - 106); ctx.stroke();
+        }
+        // little flowers dotted along the grass
+        for (let i=0; i<canvas.width+40; i+=55) {
+            let x = ((i - bgOffset*0.6) % (canvas.width+55) + canvas.width+55) % (canvas.width+55);
+            ctx.fillStyle = "#fde047";
+            ctx.beginPath(); ctx.arc(x, canvas.height-92, 3, 0, Math.PI*2); ctx.fill();
+        }
+    }
+
+    function drawTapRipple() {
+        for (let i=trails.length-1; i>=0; i--) {
+            let t = trails[i]; t.radius += 2.2; t.alpha -= 0.045;
+            if (t.alpha > 0) {
+                ctx.strokeStyle = `rgba(255, 255, 255, ${t.alpha})`; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.arc(t.x, t.y, t.radius, 0, Math.PI*2); ctx.stroke();
+            } else trails.splice(i,1);
+        }
+    }
+
+    function updateHUD() {
+        document.getElementById("hud-level").innerText = `Level ${currentLevel}`;
+        document.getElementById("hud-coins").innerText = `🪙 ${coins}`;
+        document.getElementById("level-progress").style.width = `${Math.min(100, (passedPipes/targetPipes)*100)}%`;
+    }
+
+    function saveData() {
+        localStorage.setItem("fn_level", currentLevel); localStorage.setItem("fn_coins", coins);
+        localStorage.setItem("fn_skin", equippedSkin); localStorage.setItem("fn_unlocked", JSON.stringify(unlockedSkins));
+        localStorage.setItem("fn_sound", soundEnabled);
+    }
+
+    function setScreen(id) {
+        Object.values(screens).forEach(s => s.classList.add("hidden"));
+        if (id) screens[id].classList.remove("hidden");
+    }
+
+    function startGame() {
+        let speedMultiplier = currentLevel > 20 ? 0.12 : 0.04;
+        config.speed = 2.0 + Math.min(4.5, currentLevel * speedMultiplier);
+
+        let gapReduction = currentLevel > 20 ? 2.5 : 1.2;
+        config.gap = Math.max(115, 195 - (currentLevel * gapReduction));
+
+        targetPipes = 8 + Math.floor(currentLevel * 1.0); passedPipes = 0;
+        bird.y = 350; bird.speed = 0; pipes.items = []; collectibles = []; trails = []; sparkles = []; confetti = []; cowTimer = 0;
+        updateHUD(); setScreen(null); gameState = 'PLAYING'; bird.flap();
+
+        if (window.AndroidAds) { try { window.AndroidAds.onGameStart(); } catch(e){} }
+    }
+
+    function gameOver() {
+        playSound('crash');
+        gameState = 'GAMEOVER';
+        shakeAmount = 12;
+        setScreen('gameover');
+        if (window.AndroidAds) { try { window.AndroidAds.onGameOver(); } catch(e){} }
+    }
+
+    function levelComplete() {
+        gameState = 'COMPLETE'; currentLevel++; saveData(); setScreen('complete');
+        playSound('levelup'); spawnConfetti();
+        if (window.AndroidAds) { try { window.AndroidAds.onLevelComplete(); } catch(e){} }
+    }
+    function nextLevel() { startGame(); }
+    function retryLevel() { startGame(); }
+    function showStartScreen() { gameState = 'START'; setScreen('start'); }
+    function openMenu() { if (gameState === 'PLAYING') { gameState = 'PAUSED'; setScreen('menu'); } }
+    function resumeGame() { setScreen(null); gameState = 'PLAYING'; }
+
+    function openShop() {
+        document.getElementById("shop-coins").innerText = coins;
+        const grid = document.getElementById("shop-items"); grid.innerHTML = "";
+
+        Object.keys(SKINS).forEach(key => {
+            let s = SKINS[key], isUn = unlockedSkins.includes(key), isEq = equippedSkin === key;
+            grid.innerHTML += `
+                <div class="shop-item ${isEq ? 'active' : ''}">
+                    <div class="skin-preview" style="background:radial-gradient(circle at 35% 30%, ${s.color}, ${s.color2||s.color});"></div>
+                    <div style="font-size:13px; font-weight:900;">${s.name}</div>
+                    ${isEq ? '<span style="color:#10b981; font-size:11px; font-weight:900;">SELECTED</span>' :
+                      isUn ? `<button class="btn" style="padding:6px; font-size:11px;" onclick="equipSkin('${key}')">USE</button>` :
+                      `<button class="btn btn-gold" style="padding:6px; font-size:11px;" onclick="buySkin('${key}')">🪙 ${s.cost}</button>`}
+                </div>`;
+        });
+        setScreen('shop');
+    }
+    function closeShop() { setScreen(gameState === 'PLAYING' ? 'menu' : 'start'); }
+    function buySkin(key) { if (coins >= SKINS[key].cost) { coins -= SKINS[key].cost; unlockedSkins.push(key); equippedSkin = key; saveData(); openShop(); updateHUD(); } }
+    function equipSkin(key) { equippedSkin = key; saveData(); openShop(); }
+
+    // ---- Wallet (DEMO ONLY — no real payout, for UI testing) ----
+    const WALLET_UNLOCK_RUPEES = 200;
+    function openWallet() {
+        let rupees = Math.floor(coins / 100);
+        document.getElementById("wallet-rupees").innerText = `₹${rupees}`;
+        document.getElementById("wallet-coin-count").innerText = coins;
+        document.getElementById("wallet-msg").innerText = "";
+
+        if (rupees >= WALLET_UNLOCK_RUPEES) {
+            document.getElementById("wallet-locked").classList.add("hidden");
+            document.getElementById("wallet-unlocked").classList.remove("hidden");
+        } else {
+            document.getElementById("wallet-locked").classList.remove("hidden");
+            document.getElementById("wallet-unlocked").classList.add("hidden");
+            document.getElementById("wallet-remaining").innerText = `₹${WALLET_UNLOCK_RUPEES - rupees}`;
+        }
+        setScreen('wallet');
+    }
+    function closeWallet() { setScreen(gameState === 'PLAYING' ? 'menu' : 'start'); }
+    function requestWithdraw() {
+        let upi = document.getElementById("upi-input").value.trim();
+        let msg = document.getElementById("wallet-msg");
+        if (!upi || !upi.includes("@")) {
+            msg.style.color = "#dc2626";
+            msg.innerText = "Please enter a valid UPI ID (e.g. name@upi)";
+            return;
+        }
+        msg.style.color = "#059669";
+        msg.innerText = "Demo request recorded — no real payout is sent in Demo Mode.";
+    }
+
+    function openSettings() { setScreen('settings'); }
+    function closeSettings() { setScreen('start'); }
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        document.getElementById("sound-toggle-btn").innerText = soundEnabled ? "ON" : "OFF";
+        saveData();
+    }
+
+    function handleInput(e) {
+        if (e) e.preventDefault();
+        if (gameState === 'PLAYING') bird.flap();
+        else if (gameState === 'START') startGame();
+    }
+    window.addEventListener("keydown", (e) => { if (e.code === "Space") handleInput(null); });
+    canvas.addEventListener("touchstart", handleInput, { passive: false });
+    canvas.addEventListener("mousedown", handleInput);
+
+    function loop() {
+        ctx.save();
+        if (shakeAmount > 0.3) {
+            let dx = (Math.random()-0.5)*shakeAmount, dy = (Math.random()-0.5)*shakeAmount;
+            ctx.translate(dx, dy); shakeAmount *= 0.88;
+        }
+        drawEnvironment();
+        if (gameState !== 'START' && gameState !== 'PAUSED') { pipes.update(); pipes.draw(); handleCollectibles(); }
+        drawTapRipple();
+        updateParticles();
+        if (gameState !== 'GAMEOVER' || bird.y < canvas.height) { bird.update(); bird.draw(); }
+        ctx.restore();
+        frames++; requestAnimationFrame(loop);
+    }
+
+    updateHUD(); loop();
+</script>
+</body>
+</html>
