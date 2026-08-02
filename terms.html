@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service - MK Studio</title>
+  <meta name="description" content="Terms of Service for MK Studio. Guidelines for using our website and downloading official MK Studio APKs." />
+  <meta name="theme-color" content="#03140e" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">MK Studio</div>
+  </div>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/images/logo.jpg" alt="MK Studio Logo" class="nav-logo-img" />
+        <span>MK Studio</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="privacy.html" class="nav-link">Privacy Policy</a></li>
+        <li><a href="terms.html" class="nav-link active">Terms</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+          <span id="themeIcon"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/></span>
+        </button>
+
+        <a href="index.html#hero" class="btn btn-primary" style="padding: 10px 20px;">
+          <span>Get APK</span>
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open Mobile Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 150px; padding-bottom: 80px;">
+    <div class="container" style="max-width: 900px;">
+      
+      <div class="section-title-wrap fade-in-up">
+        <span class="badge-tag">User Agreement</span>
+        <h1 class="section-title">Terms of Service</h1>
+        <p class="section-subtitle">Last Updated: August 2026</p>
+      </div>
+
+      <div class="glass-card fade-in-up" style="padding: 40px; display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">1. Agreement to Terms</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            By accessing or using the MK Studio website and downloading our application packages, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please refrain from downloading or using our software.
+          </p>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">2. Intellectual Property Rights</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            All branding, graphics, source code, logos, and digital assets associated with MK Studio are protected under applicable copyright and intellectual property laws. You may not re-package, modify, or re-distribute modified versions of MK Studio APK under a false brand name.
+          </p>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">3. Disclaimer of Warranties</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            MK Studio APK is provided on an "AS IS" and "AS AVAILABLE" basis. While we strive to ensure maximum compatibility and stability across Android devices, we do not warrant uninterrupted operation on unsupported custom ROMs or modified Android firmwares.
+          </p>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">4. Modifications to Terms</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            MK Studio reserves the right to update these terms at any time. Continued use of the app after any modifications constitutes acceptance of the new terms.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+      &copy; 2026 MK Studio. All rights reserved. | <a href="index.html" style="color: var(--primary-glow); text-decoration: none;">Return to Home</a>
+    </div>
+  </footer>
+
+  <button class="icon-btn scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to Top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>

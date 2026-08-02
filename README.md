@@ -1,26 +1,20 @@
-# Flappy Nature - Android App
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-## GitHub par upload aur APK build karne ke steps:
+# Run and deploy your AI Studio app
 
-1. GitHub par ek naya repository banao (public ya private, dono chalega).
-2. Is puri `FlappyNature` folder ka pura content us repo me upload/push kar do
-   (saare files aur folders sahit — `.github` folder bhi zaroor jaana chahiye).
-3. Upload hote hi **Actions** tab me automatically build shuru ho jayega
-   (`.github/workflows/build.yml` ki wajah se).
-4. Build complete hone ke baad, us workflow run ke andar **Artifacts** section
-   me `FlappyNature-debug-apk` milega — usse download karke APK nikal lena.
+This contains everything you need to run your app locally.
 
-## Zaroori baat - AdMob real IDs
+View your app in AI Studio: https://ai.studio/apps/fc0d3b29-684a-4380-bde1-e4ce2863b1a2
 
-Abhi is app me Google ke **TEST AdMob IDs** lagi hui hain (safe hain, koi
-dikkat nahi hogi). Play Store par publish karne se pehle in 2 jagah apni
-**real AdMob IDs** daalni hongi:
+## Run Locally
 
-- `app/src/main/AndroidManifest.xml` → `APPLICATION_ID` meta-data
-- `app/src/main/java/com/flappynature/game/MainActivity.java` →
-  `BANNER_AD_UNIT_ID` aur `INTERSTITIAL_AD_UNIT_ID`
+**Prerequisites:**  Node.js
 
-## App details
-- Package name: `com.flappynature.game`
-- Language: Java + XML
-- Game engine: HTML5/Canvas (WebView ke andar chalta hai)
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

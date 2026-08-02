@@ -1,0 +1,6 @@
+{
+  "name": "MK Studio - APK Download Hub",
+  "description": "Modern premium APK download website for MK Studio apps featuring nature green theme, interactive screenshots slider, dark mode, and easy GitHub release configuration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

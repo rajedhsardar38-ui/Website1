@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - MK Studio</title>
+  <meta name="description" content="Privacy Policy for MK Studio APK. Learn how we protect user data, handle permissions, and maintain top security standards." />
+  <meta name="theme-color" content="#03140e" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">MK Studio</div>
+  </div>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/images/logo.jpg" alt="MK Studio Logo" class="nav-logo-img" />
+        <span>MK Studio</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#screenshots" class="nav-link">Screenshots</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="privacy.html" class="nav-link active">Privacy Policy</a></li>
+        <li><a href="terms.html" class="nav-link">Terms</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+          <span id="themeIcon"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/></span>
+        </button>
+
+        <a href="index.html#hero" class="btn btn-primary" style="padding: 10px 20px;">
+          <span>Get APK</span>
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open Mobile Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 150px; padding-bottom: 80px;">
+    <div class="container" style="max-width: 900px;">
+      
+      <div class="section-title-wrap fade-in-up">
+        <span class="badge-tag">Legal & Trust</span>
+        <h1 class="section-title">Privacy Policy</h1>
+        <p class="section-subtitle">Last Updated: August 2026</p>
+      </div>
+
+      <div class="glass-card fade-in-up" style="padding: 40px; display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">1. Introduction</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            Welcome to MK Studio. We respect your privacy and are committed to protecting any personal data you may share with us. This Privacy Policy outlines how we collect, use, and safeguard information when you visit our website or download the MK Studio Android application.
+          </p>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">2. Information We Do NOT Collect</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            MK Studio is designed with a strict privacy-first architecture:
+          </p>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <li>We do NOT require user account creation or registration.</li>
+            <li>We do NOT track your precise GPS location or contacts.</li>
+            <li>We do NOT sell, rent, or trade any user data to third-party advertisers.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">3. App Permissions</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            The MK Studio APK requests only the minimum runtime permissions required for its core functionality:
+          </p>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <li><strong>Storage / Media:</strong> Required solely for local file processing or caching user preferences.</li>
+            <li><strong>Internet Access:</strong> Used for checking GitHub Release updates and downloading official patch packages.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">4. Security & Malware Protection</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            All APK release files distributed via MK Studio undergo automated VirusTotal scans and SHA-256 checksum validation prior to publishing. We guarantee 100% clean, virus-free builds with zero spyware or hidden tracking routines.
+          </p>
+        </div>
+
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-glow); margin-bottom: 8px;">5. Contact Us</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem;">
+            If you have questions or concerns regarding this Privacy Policy, please reach out via our <a href="contact.html" style="color: var(--primary-glow); text-decoration: underline;">Contact Page</a> or email support at <code>support@mkstudio.app</code>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+      &copy; 2026 MK Studio. All rights reserved. | <a href="index.html" style="color: var(--primary-glow); text-decoration: none;">Return to Home</a>
+    </div>
+  </footer>
+
+  <button class="icon-btn scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to Top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>

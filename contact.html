@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact & Support - MK Studio</title>
+  <meta name="description" content="Get in touch with the official MK Studio team. Submit feature requests, bug reports, or general inquiries." />
+  <meta name="theme-color" content="#03140e" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">MK Studio</div>
+  </div>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/images/logo.jpg" alt="MK Studio Logo" class="nav-logo-img" />
+        <span>MK Studio</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="privacy.html" class="nav-link">Privacy Policy</a></li>
+        <li><a href="terms.html" class="nav-link">Terms</a></li>
+        <li><a href="contact.html" class="nav-link active">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+          <span id="themeIcon"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/></span>
+        </button>
+
+        <a href="index.html#hero" class="btn btn-primary" style="padding: 10px 20px;">
+          <span>Get APK</span>
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open Mobile Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 150px; padding-bottom: 80px;">
+    <div class="container" style="max-width: 1000px;">
+      
+      <div class="section-title-wrap fade-in-up">
+        <span class="badge-tag">Get In Touch</span>
+        <h1 class="section-title">Contact MK Studio Support</h1>
+        <p class="section-subtitle">Have questions, feedback, or bug reports? We'd love to hear from you.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px;" class="fade-in-up">
+        
+        <div class="glass-card" style="padding: 32px; display: flex; flex-direction: column; gap: 24px;">
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem;">Support Channels</h3>
+          
+          <div style="display: flex; gap: 16px; align-items: flex-start;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16,185,129,0.15); border: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: center; color: var(--primary-glow); shrink: 0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 700;">Direct Email</h4>
+              <p style="color: var(--text-muted); font-size: 0.95rem;">support@mkstudio.app</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 16px; align-items: flex-start;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16,185,129,0.15); border: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: center; color: var(--primary-glow); shrink: 0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </div>
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 700;">GitHub Releases</h4>
+              <p style="color: var(--text-muted); font-size: 0.95rem;">github.com/mkstudio/apps</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 16px; align-items: flex-start;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16,185,129,0.15); border: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: center; color: var(--primary-glow); shrink: 0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 700;">Response Time</h4>
+              <p style="color: var(--text-muted); font-size: 0.95rem;">Within 24 hours (Mon - Fri)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 32px;">
+          <form id="contactForm" onsubmit="event.preventDefault(); alert('Message sent successfully! Our support team will get back to you shortly.');">
+            <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 20px;">Send a Message</h3>
+
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" required placeholder="John Doe" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" required placeholder="john@example.com" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <input type="text" class="form-input" required placeholder="Bug Report / Feature Request" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" rows="4" required placeholder="Describe your question or issue in detail..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">
+              <span>Send Message</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+      &copy; 2026 MK Studio. All rights reserved. | <a href="index.html" style="color: var(--primary-glow); text-decoration: none;">Return to Home</a>
+    </div>
+  </footer>
+
+  <button class="icon-btn scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to Top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
