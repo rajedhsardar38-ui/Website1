@@ -1,20 +1,16 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# MK Studio - APK Download Hub
 
-# Run and deploy your AI Studio app
+Ready to deploy on GitHub Pages. No build step needed — plain HTML/CSS/JS.
 
-This contains everything you need to run your app locally.
+## Before/after uploading, edit `script.js`
 
-View your app in AI Studio: https://ai.studio/apps/fc0d3b29-684a-4380-bde1-e4ce2863b1a2
+Open `script.js`, find `window.MK_CONFIG` near the top, and update at least:
 
-## Run Locally
+- `apkUrl` — your actual APK download link (best: a GitHub Release asset link)
+- `appName`, `version`, `fileSize`, `updatedDate` — your app's real info
 
-**Prerequisites:**  Node.js
+## Deploy
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Push/upload these files to a public GitHub repo (root of the repo).
+2. Repo Settings → Pages → Source: Deploy from branch → `main` / `/(root)` → Save.
+3. Site goes live at `https://<username>.github.io/<repo-name>/`.
