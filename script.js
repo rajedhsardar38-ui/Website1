@@ -8,24 +8,22 @@
  * Replace 'apkUrl' with your GitHub Release APK direct download link!
  */
 window.MK_CONFIG = {
-  appName: "MK Studio",
+  appName: "FlappyNature",
   subtitle: "Ultimate Premium Creative & Utility Suite for Android",
   version: "v2.4.0",
-  fileSize: "45.2 MB",
+  fileSize: "6.59 MB",
   androidVer: "Android 5.0+",
-  updatedDate: "August 2026",
+  updatedDate: "August 2025",
   downloadsCount: "125,400+",
   rating: "4.9 / 5.0",
   packageId: "com.mkstudio.app.official",
   sha256: "a8f3d91b2c4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z",
   
   // EDIT YOUR GITHUB RELEASE APK LINK HERE:
-  apkUrl: "https://github.com/mkstudio/apps/releases/download/v2.4.0/MK_Studio_v2.4.0.apk",
+apkUrl: "https://github.com/rajedhsardar38-ui/Website1/releases/download/2.4.0/Flappy.Nature.apk",
   
   // Mirror Links
-  mirrorUrl1: "https://mediafire.com/file/mk_studio_v2.4.0.apk",
-  mirrorUrl2: "https://drive.google.com/uc?export=download&id=mkstudio_apk",
-
+  
   // Changelog
   changelog: [
     "✨ Brand new Nature Green modern Glassmorphism UI",
